@@ -6,56 +6,66 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State private var selectedTab: Tabs = .home
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        ZStack(alignment: .bottom){
+            TabView(selection: $selectedTab) {
+                HomeView().tag(Tabs.home).toolbar(.hidden, for: .tabBar)
+                
+                LedgerView().tag(Tabs.ledger).toolbar(.hidden, for: .tabBar)
+            }
+            .padding(.bottom, 1)
+            
+            FloatingNewTransactionButton()
+        }
+        .safeAreaInset(edge: .bottom) {
+            HStack(spacing: 0) {
+                Button(action: {
+                    selectedTab = .home
+                }) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "square.grid.2x2.fill")
+                            .font(.system(size: 24))
+                        Text("IQ")
+                            .font(.system(size: 10, weight: .medium))
+                            .tracking(1)
                     }
+                    .foregroundColor(selectedTab == .home ? .primaryTeal : Color.white.opacity(0.4))
+                    .frame(maxWidth: .infinity)
+                    .shadow(color: selectedTab == .ledger ? .primaryTeal.opacity(0.4) : .clear, radius: 8, x: 0, y: 0)
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                
+                Button(action: {
+                    selectedTab = .ledger
+                }) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "list.bullet.rectangle")
+                            .font(.system(size: 24))
+                        Text("LEDGER")
+                            .font(.system(size: 10, weight: .medium))
+                            .tracking(1)
                     }
+                    // Dynamic styling based on selection
+                    .foregroundColor(selectedTab == .ledger ? .primaryTeal : Color.white.opacity(0.4))
+                    .frame(maxWidth: .infinity)
+                    .shadow(color: selectedTab == .ledger ? .primaryTeal.opacity(0.4) : .clear, radius: 8, x: 0, y: 0)
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .padding(.vertical, 16)
+            .padding(.horizontal, 40)
+            .background(Color.white.opacity(0.05))
+            .overlay(
+                Rectangle().frame(height: 1).foregroundColor(Color.white.opacity(0.2)),
+                alignment: .top
+            )
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+        .modifier(BackgroundMesh())
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
