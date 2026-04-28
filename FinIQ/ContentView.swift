@@ -20,7 +20,7 @@ struct ContentView: View {
             }
             .padding(.bottom, 1)
             
-            FloatingNewTransactionButton()
+            FloatingNewActivityButton()
         }
         .safeAreaInset(edge: .bottom) {
             BottomNavBar(selectedTab: $selectedTab)

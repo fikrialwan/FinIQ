@@ -55,8 +55,8 @@ struct RecentActivityCard: View {
                 .modifier(GlassCard())
             } else {
                 VStack(spacing: 12) {
-                    ForEach(activities.prefix(4), id: \.id) { activity in
-                        RecentActivityItem(activity: activity, lastActivityId: activities.prefix(4).last!.id)
+                    ForEach(activities.prefix(5), id: \.id) { activity in
+                        RecentActivityItem(activity: activity, lastActivityId: activities.prefix(5).last!.id)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -100,7 +100,7 @@ struct RecentActivityItem: View {
                 .fixedSize(horizontal: true, vertical: false)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        .padding(.bottom, activity.id != lastActivityId ? 8 : 0)
+        .padding(.bottom, activity.id != lastActivityId ? 12 : 0)
         .overlay(
             alignment: .bottom
         ) {

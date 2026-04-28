@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct FloatingNewTransactionButton: View {
+struct FloatingNewActivityButton: View {
     @State private var showSheet = false
     
     var body: some View {
@@ -85,7 +85,7 @@ struct TransactionEntrySheet: View {
                 .padding(.bottom, 24)
             
             HStack {
-                Text("New Transaction")
+                Text("New Activity")
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundColor(.onSurface)
                 
@@ -144,7 +144,7 @@ struct TransactionEntrySheet: View {
                 
                 Text("Current Balance: Rp \(currentBalance.formatted())")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(isAmountBiggerThanBalance ? .red : .onSurfaceVariant)
+                    .foregroundColor(isAmountBiggerThanBalance ? .error : .onSurfaceVariant)
             }
             
             Spacer()
@@ -249,7 +249,7 @@ struct TransactionEntrySheet: View {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.system(size: 20))
-                    Text("Add Transaction")
+                    Text("Add Activity")
                         .font(.system(size: 18, weight: .semibold))
                 }
                 .foregroundColor(.black)
@@ -267,7 +267,7 @@ struct TransactionEntrySheet: View {
 }
 
 #Preview {
-    FloatingNewTransactionButton()
+    FloatingNewActivityButton()
         .modelContainer(for: [Activity.self, HomeSummary.self])
         .modifier(BackgroundMesh())
 }

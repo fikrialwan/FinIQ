@@ -13,31 +13,31 @@ struct ActivityItem: View {
     var body: some View {
         HStack {
             Image(systemName: activity.type.icon(for: activity.category))
-                .frame(width: 50, height: 50)
+                .frame(width: 35, height: 35)
                 .foregroundColor(.onSurface)
                 .modifier(GlassPanel(cornerRadius: 8))
                 .padding(.trailing, 6)
             
             VStack(alignment: .leading) {
                 Text(activity.category.capitalized)
-                    .font(.headline)
+                    .font(.caption)
                     .foregroundColor(.onSurface)
                 Text("\(activity.note.isEmpty ? "" : "\(activity.note) • ")\(activity.date.formatted(date: .omitted,time: .shortened))")
-                    .font(.subheadline)
+                    .font(.caption2)
                     .foregroundColor(.onSurfaceVariant)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             Text("\(activity.type == .expense ? "-" : "+")Rp \(activity.amount.formatted())")
-                .font(.title)
+                .font(.title3)
                 .foregroundColor(activity.type == .expense ? .onSurface : .primaryTeal)
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .frame(maxWidth: .infinity)
-        .modifier(GlassCard())
-        .padding(.bottom, 4)
+        .padding(12)
+        .modifier(GlassPanel(cornerRadius: 12))
     }
 }
 
