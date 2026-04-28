@@ -21,7 +21,7 @@ struct EmptyState: View {
                 )
                 .modifier(GlassPanel(cornerRadius: 48))
             
-            Text("Your ledger is quiet.")
+            Text("Your activity is empty.")
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundColor(.onSurface)
             

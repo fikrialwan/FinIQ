@@ -9,7 +9,7 @@ import SwiftUI
 
 enum Tabs: Equatable, Hashable {
     case home
-    case ledger
+    case activity
 }
 
 struct BottomNavBar: View {
@@ -18,7 +18,7 @@ struct BottomNavBar: View {
     var body: some View {
         HStack(spacing: 0) {
             NavBarBottom(icon: "square.grid.2x2.fill", title: "IQ", tab: Tabs.home, selectedTab: $selectedTab)
-            NavBarBottom(icon: "list.bullet.rectangle", title: "LEDGER", tab: Tabs.ledger, selectedTab: $selectedTab)
+            NavBarBottom(icon: "list.bullet.rectangle", title: "ACTIVITY", tab: Tabs.activity, selectedTab: $selectedTab)
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 40)

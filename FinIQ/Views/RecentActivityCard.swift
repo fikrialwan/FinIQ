@@ -24,7 +24,7 @@ struct RecentActivityCard: View {
                     .clipShape(Circle())
                     .padding(.bottom, 8)
                 
-                Text("It's quiet here")
+                Text("It's empty here")
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(.onSurface)
                 

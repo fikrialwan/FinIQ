@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
-struct LedgerView: View {
+struct ActivityView: View {
     @State private var searchText: String = ""
+    @Query(sort: \Activity.date, order: .reverse) private var activities: [Activity]
+    
     var body: some View {
         VStack(spacing: 16) {
-            Text("Ledger")
+            Text("Activity")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.system(size: 32, weight: .semibold, design: .default))
                 .foregroundColor(.onSurface)
@@ -19,8 +22,16 @@ struct LedgerView: View {
             
             SearchBar(searchText: $searchText)
             
-            EmptyState()
-                .frame(maxHeight: .infinity)
+            if (activities.isEmpty) {
+                EmptyState()
+                    .frame(maxHeight: .infinity)
+            } else {
+                ScrollView {
+                    ForEach(activities) { activity in
+                        ActivityItem(activity: activity)
+                    }
+                }
+            }
             
 
         }
@@ -31,5 +42,5 @@ struct LedgerView: View {
 }
 
 #Preview {
-    LedgerView()
+    ActivityView()
 }

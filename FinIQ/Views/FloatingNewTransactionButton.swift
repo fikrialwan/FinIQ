@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FloatingNewTransactionButton: View {
     @State private var showSheet = false
@@ -29,7 +30,7 @@ struct FloatingNewTransactionButton: View {
                 .padding(.trailing, 20)
                 .padding(.bottom, 16)
                 .sheet(isPresented: $showSheet) {
-                        TransactionEntrySheet()
+                    TransactionEntrySheet()
                         .presentationBackground {
                             Color.onSurfaceContainer
                                 .overlay(
@@ -46,44 +47,8 @@ struct FloatingNewTransactionButton: View {
     }
 }
 
-enum TransactionType: String, CaseIterable {
-    case expense = "Expense"
-    case income = "Income"
-    
-    var icon: String {
-        switch self {
-        case .expense: return "arrow.up"
-        case .income: return "arrow.down"
-        }
-    }
-    
-    var categories: [(String, String)] {
-        switch self {
-        case .expense: return [
-            ("Food", "fork.knife"),
-            ("Transport", "car.fill"),
-            ("Shopping", "bag.fill"),
-            ("Housing", "house.fill"),
-            ("Subs", "play.tv.fill"),
-            ("Health", "heart.text.square.fill"),
-            ("Travel", "airplane"),
-            ("Other", "square.grid.2x2.fill")
-        ]
-        case .income: return [
-            ("Salary", "briefcase.fill"),
-            ("Freelance", "laptopcomputer"),
-            ("Investment", "chart.line.uptrend.xyaxis"),
-            ("Gift", "gift"),
-            ("Side Hustle", "storefront.fill"),
-            ("Refund", "return"),
-            ("Interest", "percent"),
-            ("Other", "square.grid.2x2.fill")
-        ]
-        }
-    }
-}
-
 struct TransactionEntrySheet: View {
+    @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
     @Namespace private var animation
     
@@ -198,7 +163,7 @@ struct TransactionEntrySheet: View {
                 .background(.white.opacity(0.1))
                 .cornerRadius(14)
                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.white.opacity(0.2), lineWidth: 1))
-        
+                
                 Text("SELECT CATEGORY")
                     .font(.system(size: 11, weight: .bold))
                     .tracking(1.5)
@@ -228,10 +193,11 @@ struct TransactionEntrySheet: View {
                         .foregroundColor(note.isEmpty ? .onSurfaceVariant : .primaryTeal)
                     
                     TextField("", text: $note, prompt: Text("Add a note...")
-                        .foregroundColor(Color.white.opacity(0.1)))
-                        .font(.system(size: 16))
-                        .foregroundColor(.onSurface)
-                        .accentColor(.primaryTeal)
+                        .foregroundColor(Color.white.opacity(0.1)), axis: .vertical)
+                    .lineLimit(1...4)
+                    .font(.system(size: 16))
+                    .foregroundColor(.onSurface)
+                    .accentColor(.primaryTeal)
                 }
                 .padding(16)
                 .background(.white.opacity(0.05))
@@ -240,7 +206,10 @@ struct TransactionEntrySheet: View {
                 .padding(.bottom, 32)
                 
                 Button(action: {
-                    // Submit action here
+                    let newActivity = Activity(
+                        amount: rawAmount, type: selectedType, category: selectedCategory, note: note
+                    )
+                    context.insert(newActivity)
                     dismiss()
                 }) {
                     HStack(spacing: 8) {
