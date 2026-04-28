@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct HomeView: View {
+    @Binding var selectedTab: Tabs
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 HeroCard()
-                RecentActivityCard()
+                RecentActivityCard(selectedTab: $selectedTab)
             }.padding(.horizontal, 20)
                 .padding(.vertical, 24)
         }
@@ -22,5 +24,6 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    @Previewable @State var selectedTab: Tabs = .home
+    HomeView(selectedTab: $selectedTab)
 }

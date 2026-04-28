@@ -11,7 +11,27 @@ import SwiftData
 struct ActivityView: View {
     @State private var searchText: String = ""
     @Query(sort: \Activity.date, order: .reverse) private var activities: [Activity]
-    
+
+    private var filteredActivities: [Activity] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !query.isEmpty else {
+            return activities
+        }
+
+        return activities.filter { activity in
+            activity.category.localizedCaseInsensitiveContains(query) || activity.note.localizedCaseInsensitiveContains(query)
+        }
+    }
+
+    private var activityDays: [ActivityDay] {
+        Dictionary(grouping: filteredActivities) { activity in
+            Calendar.current.startOfDay(for: activity.date)
+        }
+        .map { ActivityDay(day: $0.key, activities: $0.value.sorted { $0.date > $1.date }) }
+        .sorted { $0.day > $1.day }
+    }
+
     var body: some View {
         VStack(spacing: 16) {
             Text("Activity")
@@ -22,13 +42,24 @@ struct ActivityView: View {
             
             SearchBar(searchText: $searchText)
             
-            if (activities.isEmpty) {
+            if (filteredActivities.isEmpty) {
                 EmptyState()
                     .frame(maxHeight: .infinity)
             } else {
                 ScrollView {
-                    ForEach(activities) { activity in
-                        ActivityItem(activity: activity)
+                    VStack(spacing: 12) {
+                        ForEach(activityDays) { activityDay in
+                            VStack(spacing: 8) {
+                                Text(label(for: activityDay.day))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.headline)
+                                    .foregroundColor(.onSurface)
+
+                                ForEach(activityDay.activities) { activity in
+                                    ActivityItem(activity: activity)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -39,6 +70,27 @@ struct ActivityView: View {
         .padding(.horizontal, 20)
         .modifier(BackgroundMesh())
     }
+
+    private func label(for day: Date) -> String {
+        let calendar = Calendar.current
+
+        if calendar.isDateInToday(day) {
+            return "Today"
+        }
+
+        if calendar.isDateInYesterday(day) {
+            return "Yesterday"
+        }
+
+        return day.formatted(date: .long, time: .omitted)
+    }
+}
+
+private struct ActivityDay: Identifiable {
+    let day: Date
+    let activities: [Activity]
+
+    var id: Date { day }
 }
 
 #Preview {

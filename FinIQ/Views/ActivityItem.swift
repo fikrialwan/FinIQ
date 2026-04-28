@@ -23,8 +23,9 @@ struct ActivityItem: View {
                     .font(.headline)
                     .foregroundColor(.onSurface)
                 Text("\(activity.note.isEmpty ? "" : "\(activity.note) • ")\(activity.date.formatted(date: .omitted,time: .shortened))")
-                    .font(.default)
+                    .font(.subheadline)
                     .foregroundColor(.onSurfaceVariant)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             
             Text("\(activity.type == .expense ? "-" : "+")Rp \(activity.amount.formatted())")
@@ -33,7 +34,10 @@ struct ActivityItem: View {
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
                 .frame(maxWidth: .infinity, alignment: .trailing)
-        }.modifier(GlassCard())
+        }
+        .frame(maxWidth: .infinity)
+        .modifier(GlassCard())
+        .padding(.bottom, 4)
     }
 }
 
