@@ -14,6 +14,6 @@ struct FinIQApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: Activity.self)
+        .modelContainer(for: [Activity.self, HomeSummary.self])
     }
 }

@@ -54,8 +54,10 @@ struct TransactionEntrySheet: View {
     
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
+    @Query private var activities: [Activity]
+    @Query private var homeSummaries: [HomeSummary]
     @Namespace private var animation
-    
+
     @State private var selectedType: TransactionType = .expense
     @State private var rawAmount: Int = 0
     @State private var displayAmount: String = ""
@@ -128,7 +130,7 @@ struct TransactionEntrySheet: View {
                 .foregroundColor(.primaryTeal)
                 .tracking(-1)
                 
-                Text("Current Balance: Rp 45.2M")
+                Text("Current Balance: Rp \((homeSummaries.first?.balance ?? 0).formatted())")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundColor(.onSurfaceVariant)
             }
@@ -222,7 +224,14 @@ struct TransactionEntrySheet: View {
                 let newActivity = Activity(
                     amount: rawAmount, type: selectedType, category: selectedCategory, note: note
                 )
+                let homeSummary = homeSummaries.first ?? HomeSummary()
+
+                if homeSummaries.isEmpty {
+                    context.insert(homeSummary)
+                }
+
                 context.insert(newActivity)
+                homeSummary.recalculate(from: activities)
                 dismiss()
             }) {
                 HStack(spacing: 8) {
@@ -244,6 +253,8 @@ struct TransactionEntrySheet: View {
 }
 
 #Preview {
-    FloatingNewTransactionButton().modifier(BackgroundMesh())
+    FloatingNewTransactionButton()
+        .modelContainer(for: [Activity.self, HomeSummary.self])
+        .modifier(BackgroundMesh())
 }
 

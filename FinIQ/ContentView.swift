@@ -32,5 +32,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Activity.self)
+        .modelContainer(for: [Activity.self, HomeSummary.self])
 }
