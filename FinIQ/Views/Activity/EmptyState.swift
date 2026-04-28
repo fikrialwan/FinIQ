@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct EmptyState: View {
+    let icon: String
+    let title: String
+    let description: String
+    
     var body: some View {
         VStack(spacing: 16) {
             Image(systemName: "receipt.fill")
@@ -35,5 +39,9 @@ struct EmptyState: View {
 }
 
 #Preview {
-    EmptyState().modifier(BackgroundMesh())
+    EmptyState(icon: "receipt.fill", title: "Your activity is empty.", description: "Tap the + button to log your first expense or income.")
+        .modifier(BackgroundMesh())
+    
+    EmptyState(icon: "magnifyingglass", title: "No results found", description: "We couldn't find any activities matching your search. Try a different keyword")
+        .modifier(BackgroundMesh())
 }
