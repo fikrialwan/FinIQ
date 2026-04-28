@@ -64,6 +64,18 @@ struct TransactionEntrySheet: View {
     @State private var note: String = ""
     @State private var selectedCategory: String = "Food"
     @FocusState private var focusedField: FocusedField?
+
+    private var currentBalance: Int {
+        homeSummaries.first?.balance ?? 0
+    }
+
+    private var isAmountBiggerThanBalance: Bool {
+        selectedType == .expense && rawAmount > currentBalance
+    }
+
+    private var isSubmitDisabled: Bool {
+        rawAmount == 0 || isAmountBiggerThanBalance
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -130,9 +142,9 @@ struct TransactionEntrySheet: View {
                 .foregroundColor(.primaryTeal)
                 .tracking(-1)
                 
-                Text("Current Balance: Rp \((homeSummaries.first?.balance ?? 0).formatted())")
+                Text("Current Balance: Rp \(currentBalance.formatted())")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(.onSurfaceVariant)
+                    .foregroundColor(isAmountBiggerThanBalance ? .red : .onSurfaceVariant)
             }
             
             Spacer()
@@ -243,9 +255,11 @@ struct TransactionEntrySheet: View {
                 .foregroundColor(.black)
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
-                .background(.primaryTeal)
+                .background(isSubmitDisabled ? .onSurfaceVariant : .primaryTeal)
                 .cornerRadius(12)
-            }.padding(.bottom, 16)
+            }
+            .disabled(isSubmitDisabled)
+            .padding(.bottom, 16)
         }
         .padding(.horizontal, 24)
         .padding(.top, 8)
