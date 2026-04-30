@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct FinIQApp: App {
@@ -14,6 +13,5 @@ struct FinIQApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: [Activity.self, HomeSummary.self])
     }
 }

@@ -1,0 +1,30 @@
+# Xcode
+.DS_Store
+build/
+*.xcuserstate
+*.xcworkspace
+!*.xcworkspace
+
+# Config files (uncomment if using xcconfig approach)
+# **/Config.xcconfig
+# **/Config.debug.xcconfig
+# **/Config.release.xcconfig
+
+# Flutter specific (if applicable)
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# macOS
+*.log
+
+# Carthage
+Carthage/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+!/Users/fikrialwanramadhan/Documents/personal/learn/FinIQ/FinIQ.xcodeproj/project.xcworkspace

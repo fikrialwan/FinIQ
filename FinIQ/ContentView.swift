@@ -2,35 +2,58 @@
 //  ContentView.swift
 //  FinIQ
 //
-//  Created by Fikri Alwan Ramadhan on 26/04/26.
+//  Main app container with tab navigation
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @State private var selectedTab: Tabs = .home
-    
+    @State private var authViewModel = AuthViewModel()
+    @State private var selectedTab = 0
+
     var body: some View {
-        ZStack(alignment: .bottom){
-            TabView(selection: $selectedTab) {
-                HomeView(selectedTab: $selectedTab).tag(Tabs.home).toolbar(.hidden, for: .tabBar)
-                
-                ActivityView().tag(Tabs.activity).toolbar(.hidden, for: .tabBar)
+        Group {
+            if authViewModel.isAuthenticated {
+                TabView(selection: $selectedTab) {
+                    NavigationStack {
+                        HomeView(authViewModel: authViewModel)
+                    }
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                    .tag(0)
+
+                    NavigationStack {
+                        AccountListView()
+                    }
+                    .tabItem {
+                        Label("Accounts", systemImage: "creditcard")
+                    }
+                    .tag(1)
+
+                    NavigationStack {
+                        TransactionListView()
+                    }
+                    .tabItem {
+                        Label("Transactions", systemImage: "list.bullet")
+                    }
+                    .tag(2)
+
+                    NavigationStack {
+                        AnalyticsDashboardView()
+                    }
+                    .tabItem {
+                        Label("Analytics", systemImage: "chart.bar.fill")
+                    }
+                    .tag(3)
+                }
+            } else {
+                LoginView(viewModel: authViewModel)
             }
-            .padding(.bottom, 1)
-            
-            FloatingNewActivityButton()
         }
-        .safeAreaInset(edge: .bottom) {
-            BottomNavBar(selectedTab: $selectedTab)
-        }
-        .modifier(BackgroundMesh())
-        .preferredColorScheme(.dark)
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Activity.self, HomeSummary.self])
 }
