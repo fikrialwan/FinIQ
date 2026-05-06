@@ -1,16 +1,8 @@
-//
-//  Config.swift
-//  FinIQ
-//
-//  Environment config - switch via Xcode Scheme (Debug/Release)
-//
-
 import Foundation
 
 enum Config {
-    #if DEBUG
-    static let baseURL = "http://localhost:8787"
-    #else
-    static let baseURL = "https://api.finiq.com"
-    #endif
+    static let baseURL = "https://finiq-api.fikriar93.workers.dev"
+    static let accessTokenKey = "com.finiq.accessToken"
+    static let refreshTokenKey = "com.finiq.refreshToken"
+    static let tokenExpiryKey = "com.finiq.tokenExpiry"
 }
